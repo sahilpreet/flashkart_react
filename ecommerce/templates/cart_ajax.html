@@ -1,0 +1,70 @@
+{% extends "basic.html" %}
+
+{% block static_links %}
+{% load static %}
+<link rel="stylesheet" href="{%static "cart.css" %}">
+{% endblock static_links %}
+
+
+{% block title %}cart{% endblock title %}
+
+{% block body %}
+<ul class="breadcrumb">
+    <li><a href="{% url 'ecommerce:appindex' %}">Home</a></li>
+    <li>Cart</li>
+</ul>
+<section class="main">
+    Owner name 's Cart  &#9906;
+    <ul class="cart-products">
+        {% for product in cart_all %}
+        <li class="product-spec">
+            <div class="product-name">
+                <div class="product-img">
+                    <img src="/media/{{product.image}}" alt="">
+                </div>
+                <div class="product-desc">
+                    {{product.name}}
+                    <span class="price">
+                        $ {{product.discounted_price}}
+                    </span> 
+                </div>
+            </div>
+            <div class="product-price">
+                <form method="post">
+                    {% csrf_token %}
+                    <input class="product-id" type="text" name="product_id" value="{{product.id}}">
+                    <!-- <input class="btn-cart" type="submit" value="Buy Now"> -->
+                    <input class="btn-cart" type="submit" value="Remove">
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+        <li class="product-spec">
+            <div class="product-name">
+                <div class="product-img">
+                    Total Price
+                </div>
+                <div class="product-desc">
+                    <span class="price">
+                        $ {{total_price}}
+                    </span> 
+                </div>
+            </div>
+            <div class="product-price">
+                <form method="post">
+                    {% csrf_token %}
+                    <input class="product-id" type="text" name="product_id_all" value="{{cart_all}}">
+                    <!-- <input class="btn-cart" type="submit" value="Buy Now"> -->
+                    <input class="btn-cart" type="submit" value="Remove All">
+                </form>
+            </div>
+        </li>
+    </ul>
+</section>
+{% endblock body %}
+
+{% block script %}
+
+
+{% endblock script %}
+

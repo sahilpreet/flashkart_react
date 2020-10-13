@@ -1,0 +1,155 @@
+{% extends "basic.html" %}
+
+{% block static_links %}
+{% load static %}
+<link rel="stylesheet" href="{%static "cart.css" %}">
+{% endblock static_links %}
+
+
+{% block title %}cart{% endblock title %}
+
+{% block body %}
+<ul class="breadcrumb">
+    <li><a href="{% url 'ecommerce:appindex' %}">Home</a></li>
+    <li>Cart</li>
+</ul>
+<section class="main">
+    {% if request.user.customer.first_name %}
+    {{request.user.customer.first_name}} 's Cart
+    {% else %}
+    {{request.user}} 's Cart
+    {% endif %}
+    <ul class="cart-products">
+        {% for product in cart_all %}
+        <li class="product-spec" id="product-{{product.id}}">
+            <a href="{{product.get_absolute_url}}">
+                <div class="product-name">
+                    <div class="product-img">
+                        <img src="/media/{{product.image}}" alt="">
+                    </div>
+                    <div class="product-desc">
+                        {{product.name}}
+                        <span class="price">
+                            $ <span id="product-price-{{product.id}}">{{product.discounted_price}}</span> 
+                        </span> 
+                    </div>
+                </div>
+            </a>
+                <div class="product-price">
+                <!-- <form method="post"> -->
+                    <!-- { csrf_token %} -->
+                    <a class="product-id">{{product.id}}</a>
+                    <!-- <input class="btn-cart" type="submit" value="Buy Now"> -->
+                    <input class="btn-cart" type="submit" value="Remove">
+                <!-- </form> -->
+            </div>
+        </li>
+        {% endfor %}
+        <li class="product-spec">
+           <div class="product-name">
+                <div class="product-img">
+                    Total Price
+                </div>
+                <div class="product-desc">
+                    <span class="price">
+                        $ <span id="total-price">{{total_price}}</span> 
+                    </span> 
+                </div>
+            </div> 
+            <div class="product-price">
+                <form method="post">
+                    {% csrf_token %}
+                    <input class="product-id" type="text" name="product_id_all" value="{{cart_all}}">
+                    <!-- <input class="btn-cart" type="submit" value="Buy Now"> -->
+                    <input class="btn-cart" id="remove-all" type="submit" value="Remove All">
+                </form>
+            </div>
+        </li>
+    </ul>
+</section>
+{% endblock body %}
+
+{% block script %}
+/* /////////////////////////         first function then call func               /////////////////////////////*/
+async function postData(product_id){
+    url = "{% url 'ecommerce:cart_remove_ajax' %}"
+    bodyData= {product_id:product_id}
+    params={
+        method:"post",
+        credentials: 'same-origin',
+        credentials: 'include',
+        body:JSON.stringify(bodyData),
+        headers: {
+            'X-CSRFToken': "{{csrf_token}}",
+            //'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            //'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+    }
+    const response=await fetch(url,params)
+    const data=await response.json()
+    //console.log(data,'aaaa')
+    if(data){
+        if(data.cart){
+            
+        }else{
+            data.cart=0
+        }
+        //console.log(data.cart)
+        document.querySelector(`#product-${product_id}`).style.display='none'
+        document.querySelector('.cart-value').innerText=data.cart
+        //for price decrease
+        total_price=parseFloat(total_price_obj.innerText)
+        //console.log(total_price)
+        product_to_subtract=parseFloat(document.querySelector(`#product-price-${product_id}`).innerText)
+        //console.log(total_price,product_to_subtract)
+        total_price=total_price - product_to_subtract
+        if(total_price<=0){
+            document.querySelector('.cart-value').innerText=0
+            total_price=0
+        }
+        total_price_obj.innerText=total_price.toFixed(2)
+    }
+}
+//////////////           function for btn-cart start                 ////////////////
+var total_price_obj=document.querySelector('#total-price')
+
+document.querySelectorAll('.btn-cart').forEach(item => {
+    // console.log(item)
+    item.addEventListener('click',(element)=>{
+        element.preventDefault()
+        if(total_price_obj.innerText <= 0){
+            //console.log("returning")
+            return;
+        }
+        if(element.srcElement.id=='remove-all'){
+            products_all=document.querySelectorAll(".btn-cart")
+            for (element of products_all) {
+                if(element.id=='remove-all'){
+                    continue;
+                }
+                //console.log(element)
+                element.click()
+            }
+        }
+        try{
+            product_id=element.srcElement.parentNode.children[0].innerText
+            //console.log(product_id)
+            postData(product_id)
+        }catch(TypeError){
+            //console.log("error"+product_id)            
+            return;
+        }
+    })
+})
+//////////////         function for btn-cart end                    ////////////////
+
+
+
+{% endblock script %}
+
+{% block script_links %}
+<!-- <script src="/static/cart.js"></script> -->
+{% endblock script_links %}

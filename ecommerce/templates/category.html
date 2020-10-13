@@ -1,0 +1,63 @@
+{% extends "basic.html" %}
+
+{% block static_links %}
+{% load static %}
+<link rel="stylesheet" href="{%static "/category.css" %}">
+{% endblock static_links %}
+
+
+{% block title %}category{% endblock title %}
+
+{% block body %}
+<ul class="breadcrumb">
+    <li><a href="{% url 'ecommerce:appindex' %}">Home</a></li>
+    <li>{{page_obj.0.category}}</li>
+</ul>
+<section class="main">
+    <ul class="products-list">
+        {% for product in page_obj %}
+        <li class="product">
+            <div class="image">
+                <img src="/media/{{product.image}}" alt="">
+            </div>
+            <a href="{{product.get_absolute_url}}" class="product-view">
+                <span class="product-name">{{product.name}}</span>
+                <span class="product-regularprice">$ {{product.regular_price}}</span>
+                <span class="product-discountedprice"><s>$ {{product.discounted_price}}</s></span>
+                <span class="delivery-date">Get it by Wednesday, September 9 <br>
+                    FREE Delivery by Flashkart</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+        <span class="prev">
+            <a href="?page={{ page_obj.previous_page_number }}">&#x2039;</a>
+        </span>
+        <span class="prev-page">
+            {{ page_obj.previous_page_number }}
+        </span>
+        {% endif %}
+        <span class="current">
+            {{ page_obj.number }}
+        </span>
+        {% if page_obj.has_next %}
+        <span class="next-page">
+            {{ page_obj.next_page_number }}
+        </span>
+        <span class="next">
+            <a href="?page={{ page_obj.next_page_number }}">&#x203a;</a>
+        </span>
+        {% endif %}
+    </span>
+</div>
+{% endblock body %}
+
+{% block script %}
+
+
+{% endblock script %}

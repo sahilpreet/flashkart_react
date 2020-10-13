@@ -1,0 +1,28 @@
+{% extends "basic.html" %}
+
+{% block static_links %}
+{% load static %}
+<link rel="stylesheet" href="{%static "cart.css" %}">
+{% endblock static_links %}
+
+
+{% block title %}about{% endblock title %}
+
+{% block body %}
+<section class="main" style="display: flex;flex-direction: column;align-items: center;height: 60vh;width: 100vw;">
+    <ul class="breadcrumb" style="text-align: left;">
+        <li><a href="{% url 'ecommerce:appindex' %}">Home</a></li>
+        <li>about</li>
+    </ul>
+<p style="font-size: 1.2rem;overflow-wrap: break-word;word-break: break-all;@media only screen and (max-width: 500px){font-size:.7rem}">
+    This site is in develpoment and has been created by sahilpreet singh
+    <br>
+    <br>
+    for business queries contact us
+    <br>
+    <br>
+    Email : sahilpreetsingh9915545834@gmail.com
+</p>
+</section>
+    {% endblock body %}
+

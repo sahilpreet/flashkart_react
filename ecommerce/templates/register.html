@@ -1,0 +1,53 @@
+{% extends "basic_form.html" %}
+
+{% load static %}
+
+{% block static_links %}
+<link rel="stylesheet" href="{%static "./register.css" %}">
+{% endblock static_links %}
+
+{% block title %}register{% endblock title %}
+
+{% block body %}
+<section class="main">
+    <div class="form-area">
+            Flashkart Register
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="field">
+                    {{form.username.label}}
+                    {{form.username}}
+                </div>
+                <!-- not used for now -->
+                <!-- <div class="field">
+                    {form.email.label}}
+                    {form.email}}
+                </div> -->
+                <div class="field">
+                    {{form.password1.label}}
+                    {{form.password1}}
+                </div>
+                <div class="field">
+                    {{form.password2.label}}&nbsp;
+                    {{form.password2}}
+                </div>
+                <div class="btn-area">
+                    <input class="btn" type="submit" name="Create User">
+                    <input class="btn" type="reset" name="Create User">
+                </div>
+            </form>
+            {% if user_exist %}
+            <p class="error">User already exist with same email address</p>
+            {% endif %}
+            {% for field in form %}
+            {% if field.errors %}<p class="error-by-user">{{ field.label }}: {{ field.errors|striptags }}</p>{% endif %}
+            {% endfor %}
+            <div class="links">
+                <a href="{% url 'ecommerce:appindex' %}">home</a>
+                <a href="{% url 'ecommerce:login' %}">login</a>
+            </div>
+        </div>
+</section>
+{% endblock body %}
+
+

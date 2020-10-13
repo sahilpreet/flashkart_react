@@ -1,0 +1,108 @@
+{% extends "basic.html" %}
+
+{% block static_links %}
+{% load static %}
+<link rel="stylesheet" href="{%static "./product_view.css"%}">
+{% endblock static_links %}
+
+
+{% block title %}Productview {{object.name}}{% endblock title %}
+
+{% block body %}
+<ul class="breadcrumb">
+    <li><a href="{% url 'ecommerce:appindex' %}">Home</a></li>
+    <li><a href="{% url 'ecommerce:category' object.category %}">{{object.category}}</a></li>
+    <li><a href="{% url 'ecommerce:sub_category' object.sub_category %}">{{object.sub_category}}</a></li>
+    <li>{{object.name}}</li>
+</ul>
+<section class="product-container">
+    <div class="product-image">
+        <img src="/media/{{object.image}}" alt="" srcset="">
+    </div>
+    <div class="product-details">
+        <span class="product-name">
+            {{object.name}}
+        </span>
+        <span class="product-regularprice">$ {{object.regular_price}}</span>
+        <span class="product-discountedprice"><s>$ {{object.discounted_price}}</s></span>
+        <span class="btn">
+            <form action="{% url 'ecommerce:product_view' object.id %}" method="post">
+                {% csrf_token %}
+                <!-- <a href="{ url 'ecommerce:cart_ajax' %}" class="btn-cart">{{object.id}}</a> -->
+                <input class="product-id" type="text" name="product_id" value="{{object.id}}">
+                <input class="btn-cart" type="submit" value="Add to Cart">
+                <input class="btn-cart" type="submit" value="Buy Now">
+            </form>
+        </span>
+    </div>
+</section>
+<div class="container-cards-slides">
+    <div class="container-cards">
+        {% for product in products %}
+        <div class="cards">
+            <img src="/media/{{product.image}}" alt="" srcset="">
+            <div class="product-spec">
+                <span class="product_name">{{product.name | slice:":45" }}...</span>
+                <span class="product_price">${{product.regular_price}}</span>
+            </div>
+            <a class="product_view" href="{{product.get_absolute_url}}"><span>Product View</span></a>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="prev">
+        &#x2039;
+    </div>
+    <div class="next">
+        &#x203a;
+    </div>
+</div>
+{% endblock body %}
+{% block script %}
+
+////////////// function for carousel -cards end ////////////////
+
+document.querySelectorAll('.container-cards-slides .prev').forEach(item => {
+// console.log(item)
+item.addEventListener('click', (element) => {
+console.log(element.srcElement.parentNode)
+element.srcElement.parentNode.children[0].scrollBy(-window.innerWidth / 1.3, 0)
+});
+});
+document.querySelectorAll('.container-cards-slides .next').forEach(item => {
+// console.log(item)
+item.addEventListener('click', (element) => {
+console.log(element.srcElement.parentNode)
+element.srcElement.parentNode.children[0].scrollBy(window.innerWidth / 1.3, 0)
+});
+});
+
+////////////// function for carousel -cards start ////////////////
+
+//////////////           function for btn-cart start                 ////////////////
+document.querySelector('.btn .btn-cart').addEventListener('click',(element)=>{
+    element.preventDefault()
+    //console.log('aaa')
+    //console.log(element.srcElement.innerText);
+    product_id=element.srcElement.innerText
+    async function postData(){
+        url = "{% url 'ecommerce:cart_ajax' %}"
+        bodyData= {product:product_id}
+        params={
+            method:"post",
+            headers: {
+                //'X-CSRFToken': {{csrf_token}},
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'include',
+            body:JSON.stringify(bodyData),
+        }
+        const response=await fetch(url,params)
+        const data=await response.json()
+        console.log(data)
+    }
+    {{request.user}}
+}) 
+//////////////         function for btn-cart end                    ////////////////
+{% endblock script %}

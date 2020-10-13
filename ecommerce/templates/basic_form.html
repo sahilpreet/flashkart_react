@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    {% load compress %}
+
+    {% compress css %}
+    {% block static_links %}
+
+    {% endblock static_links %}
+    {% endcompress %}
+    
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    {% block body %}{% endblock body %}
+</body>
+{% compress js %}
+<script>
+    {% block script %} {% endblock script %}
+</script>
+{% block script_links %}
+{% endblock script_links %}
+
+{% endcompress %}
+</html>

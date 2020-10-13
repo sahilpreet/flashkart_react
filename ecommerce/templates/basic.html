@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    {% load compress %}
+    {% compress css %}
+    {% block static_links %}
+    <!-- <link rel="stylesheet" href="{static "./e-commerce-components-css.css" }"> -->
+    <!-- <link rel="stylesheet" href="../static/e-commerce-components-css.css"> -->
+    {% endblock static_links %}
+    {% endcompress %}
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+    <!-- how to use app index -->
+    <!-- <a href="{ url 'products' }">products</a> # use %%-->
+    <header>
+        <div class="menu-wrap">
+            <input type="checkbox" class="toggler">
+            <div class="hamburger">
+                <div></div>
+            </div>
+            <div class="menu">
+                <!-- <div> -->
+                <!-- <div> -->
+                <ul>
+                    {% if request.user.is_authenticated %}
+                        <li class="user"><a>{{username}}</a></li>
+                        <li><a href="{% url 'ecommerce:logout' %}">Logout</a></li>
+                        <li><a href="{% url 'ecommerce:customer' %}">Profile Update</a></li>
+                    {% else %}
+                        <li class="user"><a href="{% url 'ecommerce:register' %}">Sign Up Now</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'ecommerce:appindex' %}">Home</a></li>
+                    <li><a>All Categories</a></li>
+                    {% for key,values in categories.items %}
+                    <li class="category">
+                        {{key}}
+                        <ul class="sub-category">
+                            {% for sub_category in values %}
+                            {% if forloop.counter == 1 %}
+                            <!-- product is stored at 1 place -->
+                            {% else %}
+                            <li>
+                                <a href="{% url 'ecommerce:sub_category' sub_category %}">
+                                    {{sub_category}}
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <li><a href="{% url 'ecommerce:category' key %}">View All</a></li>
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <!-- </div> -->
+                <!-- </div> -->
+            </div>
+        </div>
+        <h1 class="comp-name">Flashkart</h1>
+        <form class="product-search" action="{% url 'ecommerce:search_view' %}" method="get">
+            <!-- {% csrf_token } -->
+            <input class="search-text" type="text" name="product-search" id="" placeholder="Search">
+            <div class="search-btn">
+                <a class="search-symbol">&#9906;</a>
+                <input class="search-symbol-hide" type="submit" value="&#9906;">
+            </div>
+        </form>
+        <a class="cart" href="{% url 'ecommerce:cart' %}">
+            Cart(<span class="cart-value">{{cart}}</span>)
+            <!-- <i class="fas fa-shopping-cart"></i> -->
+            <!-- <img src="{%static "./icons/shoppingcart.svg" %}" alt="" srcset=""> -->
+        </a>
+            <!-- <img src="{%static "./images/circle-cropped.png" %}" alt="" srcset=""> -->
+        </div>
+    </header>
+    {% block body %}{% endblock body %}
+    <footer>
+        <div class="foot-links">
+            <a href="{% url 'ecommerce:about' %}">About</a>
+            <a href="{% url 'ecommerce:contactus' %}">ContactUS</a>
+        </div>
+        <span>&copy; 2020-2020 Flashkart Inc</span>
+    </footer>
+</body>
+<!-- if not working use inline -->
+{% compress js %}
+<script src="{%static "./basic.js" %}"></script>
+<script>
+    {% block script %} {% endblock script %}
+</script>
+{% block script_links %}
+{% endblock script_links %}
+{% endcompress %}
+</html>

@@ -1,0 +1,45 @@
+{% extends "basic_form.html" %}
+
+{% load static %}
+
+{% block static_links %}
+<link rel="stylesheet" href="{%static "./register.css" %}">
+{% endblock static_links %}
+
+{% block title %}contactus{% endblock title %}
+
+{% block body %}
+<section class="main">
+    <div class="form-area">
+            Contact Flashkart
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="field">
+                    {{form.name.label}}
+                    {{form.name}}
+                </div>
+                <div class="field">
+                    {{form.email.label}}
+                    {{form.email}}
+                </div>
+                <div class="field">
+                    {{form.comment.label}}&nbsp;&nbsp;
+                    {{form.comment}}
+                </div>
+                <div class="btn-area">
+                    <input class="btn" type="submit" name="Create User">
+                    <input class="btn" type="reset" name="Create User">
+                </div>
+            </form>
+            {% for field in form %}
+            {% if field.errors %}<p class="error-by-user">{{ field.label }}: {{ field.errors|striptags }}</p>{% endif %}
+            {% endfor %}
+            <div class="links">
+                <a href="{% url 'ecommerce:appindex' %}">home</a>
+                <a href="{% url 'ecommerce:login' %}">login</a>
+            </div>
+        </div>
+</section>
+{% endblock body %}
+
+

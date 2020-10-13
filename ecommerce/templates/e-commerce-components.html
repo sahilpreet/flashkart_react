@@ -1,0 +1,153 @@
+{% extends "basic.html" %}
+
+{% block static_links %}
+{% load static %}
+<link rel="stylesheet" href="{%static "./e-commerce-components-css.css" %}">
+<!-- <link rel="stylesheet" href="../static/e-commerce-components-css.css"> -->
+{% endblock static_links %}
+{% block title %} index page flashkart{% endblock title %}
+
+{% block body %}
+<!-- username for user logged in -->
+<!-- {{user.username} -->
+<div class="container-img">
+    <input type="radio" name="images" id="i1" checked>
+    <input type="radio" name="images" id="i2">
+    <input type="radio" name="images" id="i3">
+    <div class="slide_img" id="one">
+        <!-- <img src="{%static "./images/logo1.jfif" %}" alt="" srcset=""> -->
+        <div class="ads-content">
+            <p>First content of Sale<br>
+                SAle will start from 20TH september <br>
+                Discount on all goods <br>
+            </p>
+        </div>
+        <label class="prev" for="i3"><span>&#x2039;</span></label>
+        <label class="next" for="i2"><span>&#x203a;</span></label>
+    </div>
+    <div class="slide_img" id="two">
+        <!-- <img src="{%static "./images/logo2.jfif" %}" alt="" srcset=""> -->
+        <div class="ads-content">
+            <p>Second content of Sale<br>
+                SAle will start from 31TH september <br>
+                Discount on selected goods <br>
+            </p>
+        </div>
+        <label class="prev" for="i1"><span>&#x2039;</span></label>
+        <label class="next" for="i3"><span>&#x203a;</span></label>
+    </div>
+    <div class="slide_img" id="three">
+        <!-- <img src="{%static "./images/logo1.jfif" %}" alt="" srcset=""> -->
+        <div class="ads-content">
+            <p>Third content of Sale<br>
+                SAle will start from 1TH september <br>
+                Discount on some goods <br>
+            </p>
+        </div>
+        <label class="prev" for="i2"><span>&#x2039;</span></label>
+        <label class="next" for="i1"><span>&#x203a;</span></label>
+    </div>
+    <div id="nav_slide">
+        <label class="dots" id="dot1" for="i1"></label>
+        <label class="dots" id="dot2" for="i2"></label>
+        <label class="dots" id="dot3" for="i3"></label>
+    </div>
+</div>
+<div class="container-cards-slides">
+    <div class="container-cards">
+        {% for product in products %}
+        {% if forloop.counter <= 20 %}
+        <div class="cards">
+            <div class="cards-image">
+                <img src="/media/{{product.image}}" alt="" srcset="">
+            </div>
+            <div class="product-spec">
+                <span class="product-name">{{product.name | slice:":45" }}...</span>
+                <span class="product-price">$ {{product.regular_price}}</span>
+            </div>
+            <a class="product_view" href="{{product.get_absolute_url}}"><span>Product View</span></a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="prev">
+        &#x2039;
+    </div>
+    <div class="next">
+        &#x203a;
+    </div>
+</div>
+<div class="boxes-container">
+    <div class="box-container">
+        {% for key,values in categories.items %}
+        {% if forloop.counter <= 9 %}
+        {% for product in values %}
+        {% if forloop.counter == 1 %}
+        <a href="{% url 'ecommerce:category' key %}">
+            <div class="boxes">
+                <div class="cat-img">
+                    <img src="/media/{{product.image}}">
+                </div>
+                <div class="cat-prod">
+                    <span>{{product.category|slice:":20"}}</span>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="box-container">
+        {% for key,values in categories.items reversed %}
+        {% if forloop.counter <= 9 %}
+        {% for product in values %}
+        {% if forloop.counter == 1 %}
+        <a href="{% url 'ecommerce:category' key %}">
+            <div class="boxes">
+                <div class="cat-img">
+                    <img src="/media/{{product.image}}">
+                </div>
+                <div class="cat-prod">
+                    <span>{{product.category|slice:":20"}}</span>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<div class="container-cards-slides">
+    <div class="container-cards">
+        {% for product in products|slice:"::-1" %}
+        {% if forloop.counter <= 20 %}
+        <div class="cards">
+            <div class="cards-image">
+                <img src="/media/{{product.image}}" alt="" srcset="">
+            </div>
+            <div class="product-spec">
+                <span class="product-name">{{product.name | slice:":45" }}...</span>
+                <span class="product-price">$ {{product.regular_price}}</span>
+            </div>
+            <a class="product_view" href="{{product.get_absolute_url}}"><span>Product View</span></a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="prev">
+        &#x2039;
+    </div>
+    <div class="next">
+        &#x203a;
+    </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+{% endblock script %}
+
+{% block script_links %}
+<script src="{%static "./e-commerce-components.js" %}"></script>
+{% endblock script_links %}
