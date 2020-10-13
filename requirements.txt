@@ -9,8 +9,6 @@ html5lib==1.1
 hyperlink==20.0.1
 idna==2.10
 incremental==17.5.0
-mysql-connector-python==8.0.21
-mysqlclient @ file:///C:/Users/hp/projectsdjango/flashkart/flashkart/mysqlclient-1.4.6-cp38-cp38-win32.whl
 Pillow==7.2.0
 protobuf==3.13.0
 psycopg2==2.8.5
@@ -21,6 +19,5 @@ rcssmin==1.0.6
 rjsmin==1.1.0
 six==1.15.0
 sqlparse==0.3.1
-Twisted @ file:///C:/Users/hp/projectsdjango/flashkart/flashkart/Twisted-20.3.0-cp38-cp38-win32.whl
 webencodings==0.5.1
 zope.interface==5.1.0
